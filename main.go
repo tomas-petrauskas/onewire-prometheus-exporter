@@ -28,7 +28,7 @@ var (
 	onewireDevicePath      = "/sys/bus/w1/devices/"
 	onewireDeviceList      []string
 	hostname, _            = os.Hostname()
-	dataCollectionInterval = flag.Int("web.data-collection-interval", 15, "Data collection interval in seconds")
+	dataCollectionInterval = flag.Int("web.data-collection-interval", 5, "Data collection interval in seconds")
 	listenAddress          = flag.String("web.listen-address", ":8105", "Address and port to expose metrics")
 	metricsPath            = flag.String("web.telemetry-path", "/metrics", "Path under which to expose metrics.")
 	jsonMetricsPath        = flag.String("web.json-path", "/json", "Path under which to expose json metrics.")

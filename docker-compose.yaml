@@ -1,0 +1,14 @@
+services:
+  onewire-prometheus-exporter:
+    image: onewire-prometheus-exporter:latest
+    restart: unless-stopped
+    ports:
+      - 8105:8105
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - /sys/bus/w1/devices:/sys/bus/w1/devices
+    # TODO: remove this if not needed
+    # devices:
+    #   - /dev/w1-*
