@@ -24,14 +24,15 @@ type sensor struct {
 }
 
 var (
-	sensors             []sensor
-	onewireDevicePath   = "/sys/bus/w1/devices/"
-	onewireDeviceList   []string
-	hostname, _         = os.Hostname()
-	listenAddress       = flag.String("web.listen-address", ":8105", "Address and port to expose metrics")
-	metricsPath         = flag.String("web.telemetry-path", "/metrics", "Path under which to expose metrics.")
-	jsonMetricsPath     = flag.String("web.json-path", "/json", "Path under which to expose json metrics.")
-	onewireTemperatureC = prometheus.NewGaugeVec(
+	sensors                []sensor
+	onewireDevicePath      = "/sys/bus/w1/devices/"
+	onewireDeviceList      []string
+	hostname, _            = os.Hostname()
+	dataCollectionInterval = flag.Int("web.data-collection-interval", 15, "Data collection interval in seconds")
+	listenAddress          = flag.String("web.listen-address", ":8105", "Address and port to expose metrics")
+	metricsPath            = flag.String("web.telemetry-path", "/metrics", "Path under which to expose metrics.")
+	jsonMetricsPath        = flag.String("web.json-path", "/json", "Path under which to expose json metrics.")
+	onewireTemperatureC    = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Name: "onewire_temperature_c",
 			Help: "Onewire Temperature Sensor Value in Celsius.",
@@ -91,7 +92,8 @@ func jsonPathHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func observeOnewireTemperature() {
-	// lists onewire devices
+	sleepDuration := time.Duration(*dataCollectionInterval) * time.Second
+
 	err := createOnewireDeviceList()
 	if err != nil {
 		log.Fatal("Error getting Onewire device list")
@@ -109,7 +111,7 @@ func observeOnewireTemperature() {
 			sensors[index] = sensor{SensorID: deviceID, SensorType: "temperature", SensorValue: value}
 			index++
 		}
-		time.Sleep(60 * time.Second)
+		time.Sleep(sleepDuration)
 	}
 }
 
