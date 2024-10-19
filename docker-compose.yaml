@@ -1,14 +1,28 @@
 services:
-  onewire-prometheus-exporter:
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: temperature_prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    expose:
+      - 9090
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    restart: unless-stopped
+
+  exporter:
     image: ghcr.io/tomas-petrauskas/onewire-prometheus-exporter:latest
     restart: unless-stopped
-    ports:
-      - 8105:8105
+    container_name: temperature_exporter
+    expose:
+      - 8105
     build:
       context: .
       dockerfile: Dockerfile
     volumes:
       - /sys/bus/w1/devices:/sys/bus/w1/devices
-    # TODO: remove this if not needed
-    # devices:
-    #   - /dev/w1-*
+
+volumes:
+  prometheus_data:
