@@ -1,6 +1,6 @@
 services:
   onewire-prometheus-exporter:
-    image: onewire-prometheus-exporter:latest
+    image: ghcr.io/tomas-petrauskas/onewire-prometheus-exporter:latest
     restart: unless-stopped
     ports:
       - 8105:8105
