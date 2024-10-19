@@ -1,4 +1,5 @@
 FROM golang:1.23 AS builder
+LABEL org.opencontainers.image.source https://github.com/tomas-petrauskas/go-tapo-exporter
 
 # Set the Current Working Directory inside the container
 WORKDIR /app
