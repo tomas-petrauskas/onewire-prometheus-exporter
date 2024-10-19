@@ -29,11 +29,10 @@ services:
     volumes:
       - /sys/bus/w1/devices:/sys/bus/w1/devices:ro
 
-volumes:
-  prometheus_data:
-
 networks:
   temperature:
   metrics:
-    external:
-      name: metrics
+    external: true
+
+volumes:
+  prometheus_data:
