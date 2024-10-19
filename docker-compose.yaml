@@ -3,6 +3,9 @@ services:
   prometheus:
     image: prom/prometheus:latest
     container_name: temperature_prometheus
+    networks:
+      - temperature
+      - metrics
     volumes:
       - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
@@ -16,13 +19,21 @@ services:
     image: ghcr.io/tomas-petrauskas/onewire-prometheus-exporter:latest
     restart: unless-stopped
     container_name: temperature_exporter
+    networks:
+      - temperature
     expose:
       - 8105
     build:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - /sys/bus/w1/devices:/sys/bus/w1/devices
+      - /sys/bus/w1/devices:/sys/bus/w1/devices:ro
 
 volumes:
   prometheus_data:
+
+networks:
+  temperature:
+  metrics:
+    external:
+      name: metrics
